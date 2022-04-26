@@ -3,6 +3,28 @@ use std::io::{BufRead, BufReader};
 
 use crate::grid::Grid;
 
+/**
+Imprime la diferencia entre dos archivos de texto, usando un algoritmo para encontrar
+la mayor subsecuencia de lineas en común.
+
+# Argumentos
+
+* `first_path` - Un slice de string que contiene el path al primer archivo a comparar
+* `second_path` - Un slice de string que contiene el path al segundo archivo a comparar
+
+# Errores
+
+Esta función devolverá un error si falla la lectura de los archivos con `read_file_lines()`
+
+# Ejemplos
+
+```no_run
+if let Err(error) = diff("some_file.txt", "other_file.txt"){
+    // Manejamos el error
+    println!("Error al generar diff! {}", error);
+}
+```
+*/
 pub fn diff(first_path: &str, second_path: &str) -> std::io::Result<()>{
     let first_file_lines = read_file_lines(first_path)?;
     let second_file_lines = read_file_lines(second_path)?;
@@ -17,25 +39,56 @@ pub fn diff(first_path: &str, second_path: &str) -> std::io::Result<()>{
     Ok(())
 }
 
-/// Función que dada la ruta de un archivo de texto devuelve sus líneas
-/// en un vector de Strings.
-///
-/// Recibe un slice de la ruta del archivo, lo abre, vuelca sus lineas
-/// en un buffer y las colecciona en un vector de Strings. Devuelve un
-/// Result<Vec<String>> porque la apertura y la lectura de lineas puede fallar.
+/**
+Función que dada la ruta de un archivo de texto devuelve sus líneas
+en un vector de Strings.
+
+# Argumentos
+
+* `path` - Un slice de string que contiene el path a un archivo
+
+# Errores
+
+Esta función devolverá un error si falla la apertura del archivo, por
+ejemplo, si no existe.
+
+# Ejemplos
+
+```no_run
+let lines = match diff::lcs::read_file_lines("some_file.txt"){
+    Ok(lines) => lines,
+    Err(e) => {
+        println!("Error en la apertura del archivo {}", e);
+        // Manejamos el error
+    }
+};
+```
+*/
 fn read_file_lines(path: &str) -> std::io::Result<Vec<String>> {
     let file = File::open(path)?;
     let buffer = BufReader::new(file);
     buffer.lines().collect()
 }
 
-/// Encuentra la mayor subsecuencia en común entre dos secuencias de lineas
-/// y guarda la información en un Grid.
-///
-/// Recibe las dos secuencias como referencias a vectores de Strings,
-/// aplica el algoritmo de LCS y devuelve un Grid con el que ya se puede
-/// conseguir cual es la subsecuencia, que lineas se deben agregar y cuales
-/// se deben quitar para hacer coincidir las secuencias.
+/**
+Algoritmo de LCS que devuelve un Grid con la información para poder reconstruir
+la diferencia entre las dos secuencias. Esta función por si misma no tiene sentido 
+sin llamar a alguna que sepa encontrar la diferencia dado el grid y las secuencias.
+
+# Argumentos
+
+* `first_sequence` - Un slice de array que contiene la primera secuencia de strings
+* `second_sequence` - Un slice de array que contiene la segunda secuencia de strings
+
+# Ejemplos
+
+```no_run
+let first = vec!["a", "b", "c"];
+let second = vec!["a", "c", "b"];
+let diff_grid = lcs(&first, &second);
+// Usamos el grid para reconstruir la diferencia.
+```
+*/
 fn lcs(first_sequence: &[String], second_sequence: &[String]) -> Grid {
     let m = first_sequence.len();
     let n = second_sequence.len();
@@ -54,13 +107,36 @@ fn lcs(first_sequence: &[String], second_sequence: &[String]) -> Grid {
     grid
 }
 
-/// Funcion recursiva que imprime la diferencia entre dos secuencias
-/// de lineas dada la información de un Grid.
-///
-/// Recibe un Grid, dos referencias a las secuencias, dos usize para
-/// leer las filas y columnas del Grid e imprime las subsecuencias
-/// de distinta forma dependiendo si son comunes a ambas secuencias
-/// o no.
+/**
+Funcion recursiva que imprime la diferencia entre dos secuencias
+de strings dada la información de un Grid, dependiendo de si son
+strings en común, o si se deben quitar de alguna secuencia para
+hacerlas coincidir.
+
+# Argumentos
+
+* `grid` - Grid resultado de la aplicación de un algoritmo de LCS sobre dos secuencias
+* `first_sequence` - Slice de array que contiene la primera de las secuencias a comparar
+* `second_sequence` - Slice de array que contiene la segunda secuencia a comparar
+* `i`, `j` - Usize que representan la cantidad de elementos de la primera y segunda secuencia respectivamente
+
+# Ejemplos
+```no_run
+let first = vec!["a", "b", "c", "d", "a", "f"];
+let second = vec!["a", "c", "b", "c", "f"];
+// Notemos que la mayor subsecuencia en común es a, b, c, f
+// Y que deberíamos quitar "d, a" de la primera y "c" de la segunda
+let diff_grid = lcs(&first, &second);
+print_diff(
+grid,
+&first_file_lines,
+&second_file_lines,
+first_file_lines.iter().len(),
+second_file_lines.iter().len(),
+);
+```
+*/
+
 fn print_diff(
     grid: Grid,
     first_sequence: &[String],
