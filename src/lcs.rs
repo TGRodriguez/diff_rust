@@ -25,7 +25,7 @@ if let Err(error) = diff("some_file.txt", "other_file.txt"){
 }
 ```
 */
-pub fn diff(first_path: &str, second_path: &str) -> std::io::Result<()>{
+pub fn diff(first_path: &str, second_path: &str) -> std::io::Result<()> {
     let first_file_lines = read_file_lines(first_path)?;
     let second_file_lines = read_file_lines(second_path)?;
     let grid = lcs(&first_file_lines, &second_file_lines);
@@ -72,7 +72,7 @@ fn read_file_lines(path: &str) -> std::io::Result<Vec<String>> {
 
 /**
 Algoritmo de LCS que devuelve un Grid con la información para poder reconstruir
-la diferencia entre las dos secuencias. Esta función por si misma no tiene sentido 
+la diferencia entre las dos secuencias. Esta función por si misma no tiene sentido
 sin llamar a alguna que sepa encontrar la diferencia dado el grid y las secuencias.
 
 # Argumentos
@@ -92,16 +92,19 @@ let diff_grid = lcs(&first, &second);
 fn lcs(first_sequence: &[String], second_sequence: &[String]) -> Grid {
     let m = first_sequence.len();
     let n = second_sequence.len();
-    let mut grid = Grid::new(m+1, n+1);
+    let mut grid = Grid::new(m + 1, n + 1);
 
-    for (i, first_item) in first_sequence.iter().enumerate(){
-        for (j, second_item) in second_sequence.iter().enumerate(){
-            if first_item == second_item{
-                grid.insert(i+1, j+1,grid.get(i, j) +1);
+    for (i, first_item) in first_sequence.iter().enumerate() {
+        for (j, second_item) in second_sequence.iter().enumerate() {
+            if first_item == second_item {
+                grid.insert(i + 1, j + 1, grid.get(i, j) + 1);
             } else {
-                grid.insert(i+1, j+1, std::cmp::max(grid.get(i+1, j), grid.get(i, j+1)));
+                grid.insert(
+                    i + 1,
+                    j + 1,
+                    std::cmp::max(grid.get(i + 1, j), grid.get(i, j + 1)),
+                );
             }
-
         }
     }
     grid
