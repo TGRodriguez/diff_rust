@@ -1,2 +1,2 @@
-pub mod lcs;
 pub mod grid;
+pub mod lcs;
