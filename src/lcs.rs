@@ -19,7 +19,7 @@ Esta función devolverá un error si falla la lectura de los archivos con `read_
 # Ejemplos
 
 ```no_run
-if let Err(error) = diff("some_file.txt", "other_file.txt"){
+if let Err(error) = diff::lcs::diff("some_file.txt", "other_file.txt"){
     // Manejamos el error
     println!("Error al generar diff! {}", error);
 }
@@ -54,7 +54,7 @@ ejemplo, si no existe.
 
 # Ejemplos
 
-```no_run
+```ignore
 let lines = match diff::lcs::read_file_lines("some_file.txt"){
     Ok(lines) => lines,
     Err(e) => {
@@ -82,7 +82,7 @@ sin llamar a alguna que sepa encontrar la diferencia dado el grid y las secuenci
 
 # Ejemplos
 
-```no_run
+```ignore
 let first = vec!["a", "b", "c"];
 let second = vec!["a", "c", "b"];
 let diff_grid = lcs(&first, &second);
@@ -124,7 +124,7 @@ hacerlas coincidir.
 * `i`, `j` - Usize que representan la cantidad de elementos de la primera y segunda secuencia respectivamente
 
 # Ejemplos
-```no_run
+```ignore
 let first = vec!["a", "b", "c", "d", "a", "f"];
 let second = vec!["a", "c", "b", "c", "f"];
 // Notemos que la mayor subsecuencia en común es a, b, c, f
