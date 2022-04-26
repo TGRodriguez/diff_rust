@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Grid","Estructura que representa un grilla, similar a una matriz."]]});
