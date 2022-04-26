@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["diff",""]]});
+initSidebarItems({"fn":[["diff","Imprime la diferencia entre dos archivos de texto, usando un algoritmo para encontrar la mayor subsecuencia de lineas en común."]]});

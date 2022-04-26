@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Grid","Estructura que representa un grilla, similar a una matriz."]]});
+initSidebarItems({"struct":[["Grid","Estructura que representa un grilla, similar a una matriz, que almacena enteros sin signar."]]});
